@@ -1,6 +1,10 @@
 {
   "tasks": {
-    "run:dev": "deno run --allow-all --watch src/server.ts"
+    "run:dev": "deno run --allow-all --watch src/server.ts",
+    "prepare": "deno fmt && deno lint && deno test --allow-none --coverage"
+  },
+  "test": {
+    "include": ["src/"]
   },
   "lint": {
     "include": ["src/"],
