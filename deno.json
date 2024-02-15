@@ -1,0 +1,24 @@
+{
+  "tasks": {
+    "run:dev": "deno run --allow-all --watch src/server.ts"
+  },
+  "lint": {
+    "include": ["src/"],
+    "exclude": [],
+    "rules": {
+      "tags": ["recommended"],
+      "include": ["ban-untagged-todo"],
+      "exclude": ["no-unused-vars"]
+    }
+  },
+  "fmt": {
+    "include": ["src/"],
+    "exclude": [],
+    "useTabs": false,
+    "indentWidth": 2,
+    "semiColons": true,
+    "singleQuote": true,
+    "lineWidth": 80,
+    "proseWrap": "preserve"
+  }
+}
