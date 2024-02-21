@@ -1,0 +1,21 @@
+{
+  "allowedKeys": [ "type", "date", "author", "source" ],
+  "statusCodes": {
+    "NO_POST": {
+      "code": 501,
+      "message": "Only requests with POST method are allowed."
+    },
+    "NO_BODY": {
+      "code": 502,
+      "message": "Missing or empty body found but body expected."
+    },
+    "NO_PATH": {
+      "code": 503,
+      "message": "URL path does not match any image path/name artefact."
+    },
+    "DISALLOWED_KEY_USED": {
+      "code": 504,
+      "message": "Unsupported key used in body."
+    }
+  }
+}
