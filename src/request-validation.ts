@@ -1,14 +1,14 @@
-import { allowedKeys, statusCodes } from '../config.json' with { type: 'json' };
+import config from '../config.json' with { type: 'json' };
 
 export const validateRequest = async (
   req: Request,
-): Promise<{ isValid: boolean; message?: string; statusCode?: number }> => {
+): Promise<{ isValid: false; message: string; statusCode: number } | { isValid: true; }> => {
   // Guard for HTTP method
   if (req.method !== 'POST') {
     return {
       isValid: false,
-      message: statusCodes.NO_POST.message,
-      statusCode: statusCodes.NO_POST.code,
+      message: config.statusCodes.NO_POST.message,
+      statusCode: config.statusCodes.NO_POST.code,
     };
   }
 
@@ -17,8 +17,8 @@ export const validateRequest = async (
   if (path === '/' || path === '') {
     return {
       isValid: false,
-      message: statusCodes.NO_PATH.message,
-      statusCode: statusCodes.NO_PATH.code,
+      message: config.statusCodes.NO_PATH.message,
+      statusCode: config.statusCodes.NO_PATH.code,
     };
   }
 
@@ -26,21 +26,21 @@ export const validateRequest = async (
   if (!req.body) {
     return {
       isValid: false,
-      message: statusCodes.NO_BODY.message,
-      statusCode: statusCodes.NO_BODY.code,
+      message: config.statusCodes.NO_BODY.message,
+      statusCode: config.statusCodes.NO_BODY.code,
     };
   }
 
   // Guard for keys
-  const body = await req.json();
+  const body = req.body
   const allKeysAreAllowed = Object.keys(body).every((key) =>
-    allowedKeys.includes(key)
+    config.allowedKeys.includes(key)
   );
   if (!allKeysAreAllowed) {
     return {
       isValid: false,
-      message: statusCodes.DISALLOWED_KEY_USED.message,
-      statusCode: statusCodes.DISALLOWED_KEY_USED.code,
+      message: config.statusCodes.DISALLOWED_KEY_USED.message,
+      statusCode: config.statusCodes.DISALLOWED_KEY_USED.code,
     };
   }
 
