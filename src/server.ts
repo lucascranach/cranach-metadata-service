@@ -1,9 +1,9 @@
-import { hostname, port, imageBasePath } from './environment.ts';
+import { hostname, imageBasePath, port } from './environment.ts';
 import { validateRequest } from './request-validation.ts';
 import { existsSync } from 'https://deno.land/std/fs/mod.ts';
 
 const handler = async (req: Request) => {
-  await req.json()
+  await req.json();
   // Perform validation
   const validationResult = await validateRequest(req);
   if (!validationResult.isValid) {
@@ -18,8 +18,12 @@ const handler = async (req: Request) => {
   const exists = existsSync(imageBasePath + imagePath);
 
   // Send response
-  
-  return new Response(exists ? `Successfully updated ${new URL(req.url).pathname}!` : `${new URL(req.url).pathname} not found!`);
+
+  return new Response(
+    exists
+      ? `Successfully updated ${new URL(req.url).pathname}!`
+      : `${new URL(req.url).pathname} not found!`,
+  );
 };
 
 Deno.serve({ port, hostname, handler });

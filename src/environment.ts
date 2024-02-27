@@ -4,4 +4,3 @@ const ENV = await load();
 export const port = parseInt(ENV['PORT']);
 export const hostname = ENV['HOSTNAME'];
 export const imageBasePath = ENV['IMAGE_BASE_PATH'];
-

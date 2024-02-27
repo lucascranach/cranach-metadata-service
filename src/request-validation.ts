@@ -1,8 +1,10 @@
 import config from '../config.json' with { type: 'json' };
 
-export const validateRequest = async (
+export const validateRequest = (
   req: Request,
-): Promise<{ isValid: false; message: string; statusCode: number } | { isValid: true; }> => {
+): { isValid: false; message: string; statusCode: number } | {
+  isValid: true;
+} => {
   // Guard for HTTP method
   if (req.method !== 'POST') {
     return {
@@ -32,7 +34,7 @@ export const validateRequest = async (
   }
 
   // Guard for keys
-  const body = req.body
+  const body = req.body;
   const allKeysAreAllowed = Object.keys(body).every((key) =>
     config.allowedKeys.includes(key)
   );
