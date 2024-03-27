@@ -3,7 +3,7 @@ import { apiKey } from './environment.ts';
 
 export const validateRequest = (
   req: Request,
-  body: any,
+  body: Map<string, string>,
 ): { isValid: false; message: string; statusCode: number } | {
   isValid: true;
 } => {
@@ -43,7 +43,6 @@ export const validateRequest = (
       statusCode: config.statusCodes.NO_BODY.code,
     };
   }
-
 
   const allKeysAreAllowed = Object.keys(body).every((key) =>
     config.allowedKeys.includes(key)
