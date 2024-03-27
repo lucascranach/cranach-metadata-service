@@ -1,10 +1,21 @@
 import config from '../config.json' with { type: 'json' };
+import { apiKey } from './environment.ts';
 
 export const validateRequest = (
   req: Request,
+  body: any,
 ): { isValid: false; message: string; statusCode: number } | {
   isValid: true;
 } => {
+  // Guard for HTTP method
+  if (req.headers.get('Authorization') !== apiKey) {
+    return {
+      isValid: false,
+      message: config.statusCodes.UNAUTHORIZED.message,
+      statusCode: config.statusCodes.UNAUTHORIZED.code,
+    };
+  }
+
   // Guard for HTTP method
   if (req.method !== 'POST') {
     return {
@@ -33,8 +44,7 @@ export const validateRequest = (
     };
   }
 
-  // Guard for keys
-  const body = req.body;
+
   const allKeysAreAllowed = Object.keys(body).every((key) =>
     config.allowedKeys.includes(key)
   );
