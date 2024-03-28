@@ -1,9 +1,13 @@
 import config from '../config.json' with { type: 'json' };
 import { apiKey } from './environment.ts';
 
+export interface Body {
+  [key: string]: string;
+} 
+
 export const validateRequest = (
   req: Request,
-  body: Map<string, string>,
+  body: Body,
 ): { isValid: false; message: string; statusCode: number } | {
   isValid: true;
 } => {
@@ -36,7 +40,7 @@ export const validateRequest = (
   }
 
   // Guard for body
-  if (!req.body) {
+  if (!body) {
     return {
       isValid: false,
       message: config.statusCodes.NO_BODY.message,

@@ -4,7 +4,7 @@ import {
   jsonDataFileSuffix,
   port,
 } from './environment.ts';
-import { validateRequest } from './request-validation.ts';
+import { validateRequest, Body } from './request-validation.ts';
 import { existsSync } from 'https://deno.land/std/fs/mod.ts';
 import config from '../config.json' with { type: 'json' };
 
@@ -17,7 +17,7 @@ const buildResponse = (errorId: ErrorId) =>
 
 const handler = async (req: Request) => {
   // Try to read body
-  let body = {};
+  let body: Body = {};
   try {
     body = await req.json();
   } catch {
