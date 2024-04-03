@@ -16,6 +16,20 @@ const buildResponse = (errorId: ErrorId) =>
   });
 
 const handler = async (req: Request) => {
+  if(req.method === 'GET') {
+    const requestPath = (new URL(req.url)).pathname.split('/');
+    const directoryPath = `${imageBasePath}/${requestPath[1]}`;
+    const filePath = `${directoryPath}/${requestPath[1]}_${
+      requestPath[2]
+    }-${jsonDataFileSuffix}`;
+    const directoryExists = existsSync(directoryPath);
+    const fileExsists = existsSync(filePath);
+
+    if (!directoryExists || !fileExsists) return buildResponse('ARTEFACT_NOT_FOUND');
+
+    const metadata = JSON.parse(await Deno.readTextFile(filePath));
+    return new Response(JSON.stringify(metadata, null, 2));
+  }
   // Try to read body
   let body: Body = {};
   try {
