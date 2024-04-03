@@ -14,5 +14,5 @@ deno task run:dev
 
 ```
   source .env
-  deno run --allow-net=$HOST_NAME:$PORT --allow-read=$IMAGE_BASE_PATH --allow-write=$IMAGE_BASE_PATH src/server.ts
+  deno run --allow-net=$HOST_NAME:$PORT --allow-read=$IMAGE_BASE_PATH,.env,.env.defaults,.env.example --allow-write=$IMAGE_BASE_PATH src/server.ts
 ```
