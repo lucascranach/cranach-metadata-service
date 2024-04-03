@@ -18,9 +18,9 @@ const buildResponse = (errorId: ErrorId, context?: string) =>
 const handler = async (req: Request) => {
   if(req.method === 'GET') {
     const requestPath = (new URL(req.url)).pathname.split('/');
-    const directoryPath = `${imageBasePath}/${requestPath[1]}`;
-    const filePath = `${directoryPath}/${requestPath[1]}_${
-      requestPath[2]
+    const directoryPath = `${imageBasePath}/${requestPath[2]}`;
+    const filePath = `${directoryPath}/${requestPath[2]}_${
+      requestPath[3]
     }-${jsonDataFileSuffix}`;
     const directoryExists = existsSync(directoryPath);
     const fileExsists = existsSync(filePath);
@@ -50,9 +50,9 @@ const handler = async (req: Request) => {
 
   // Perform request
   const requestPath = (new URL(req.url)).pathname.split('/');
-  const directoryPath = `${imageBasePath}/${requestPath[1]}`;
-  const filePath = `${directoryPath}/${requestPath[1]}_${
-    requestPath[2]
+  const directoryPath = `${imageBasePath}/${requestPath[2]}`;
+  const filePath = `${directoryPath}/${requestPath[2]}_${
+    requestPath[3]
   }-${jsonDataFileSuffix}`;
   const directoryExists = existsSync(directoryPath);
   const fileExsists = existsSync(filePath);
