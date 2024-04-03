@@ -10,8 +10,8 @@ import config from '../config.json' with { type: 'json' };
 
 type ErrorId = keyof typeof config.statusCodes;
 
-const buildResponse = (errorId: ErrorId) =>
-  new Response(config.statusCodes[errorId].message, {
+const buildResponse = (errorId: ErrorId, context?: string) =>
+  new Response(config.statusCodes[errorId].message + (context ? `: ${context}` : ''), {
     status: config.statusCodes[errorId].code,
   });
 
@@ -25,7 +25,7 @@ const handler = async (req: Request) => {
     const directoryExists = existsSync(directoryPath);
     const fileExsists = existsSync(filePath);
 
-    if (!directoryExists || !fileExsists) return buildResponse('ARTEFACT_NOT_FOUND');
+    if (!directoryExists || !fileExsists) return buildResponse('ARTEFACT_NOT_FOUND', filePath);
 
     const metadata = JSON.parse(await Deno.readTextFile(filePath));
     return new Response(JSON.stringify(metadata, null, 2));
