@@ -13,6 +13,6 @@ deno task run:dev
 ## Deployment
 
 ```
-  export .env
+  source .env
   deno run --allow-net=$HOST_NAME:$PORT --allow-read=$IMAGE_BASE_PATH --allow-write=$IMAGE_BASE_PATH src/server.ts
 ```
