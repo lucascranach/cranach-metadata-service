@@ -1,6 +1,7 @@
 const url = new URL(window.location)
 const artefact = url.searchParams.get('artefact')
 const image = url.searchParams.get('image')
+const apiKey = url.searchParams.get('apiKey')
 
 Object.keys(this.globalData.fields).forEach((field) => {
   const input = document.querySelector('template').content.cloneNode(true);
@@ -20,5 +21,5 @@ form.addEventListener('submit', (event) => {
 
   console.log(data);
   
-  fetch(`${globalData.pathPrefix}/${artefact}/${image}`, {method: 'POST', body: JSON.stringify(data), headers: {Authorization: globalData.apiKey}})
+  fetch(`${globalData.pathPrefix}/${artefact}/${image}`, {method: 'POST', body: JSON.stringify(data), headers: {Authorization: apiKey}})
 });

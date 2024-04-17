@@ -23,7 +23,6 @@ export const getInjectionHandler = async (req: Request) => {
   })
   const dataToInject = JSON.stringify({
     fields,
-    apiKey,
     artefact,
     image,
     pathPrefix
