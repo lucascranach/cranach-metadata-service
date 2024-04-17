@@ -20,5 +20,5 @@ form.addEventListener('submit', (event) => {
 
   console.log(data);
   
-  fetch(`/${artefact}/${image}`, {method: 'POST', body: JSON.stringify(data), headers: {Authorization: globalData.apiKey}})
+  fetch(`${globalData.pathPrefix}/${artefact}/${image}`, {method: 'POST', body: JSON.stringify(data), headers: {Authorization: globalData.apiKey}})
 });

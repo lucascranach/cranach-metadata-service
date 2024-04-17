@@ -26,6 +26,7 @@ export const getInjectionHandler = async (req: Request) => {
     apiKey,
     artefact,
     image,
+    pathPrefix
   });
   return new Response(`this.globalData = ${dataToInject}`);
 }
