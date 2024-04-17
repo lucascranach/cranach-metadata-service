@@ -1,75 +1,25 @@
-import {
-  hostname,
-  imageBasePath,
-  jsonDataFileSuffix,
-  port,
-} from './environment.ts';
-import { validateRequest, Body } from './request-validation.ts';
-import { existsSync } from 'https://deno.land/std/fs/mod.ts';
-import config from '../config.json' with { type: 'json' };
-
-type ErrorId = keyof typeof config.statusCodes;
-
-const buildResponse = (errorId: ErrorId, context?: string) =>
-  new Response(config.statusCodes[errorId].message + (context ? `: ${context}` : ''), {
-    status: config.statusCodes[errorId].code,
-  });
+import { buildResponse } from './utils.ts';
+import { hostname, port } from './environment.ts';
+import { getFileHandler, getInjectionHandler, getMetadataHandler, updateMetadataHandler, getEditorUIHandler } from './handler.ts';
 
 const handler = async (req: Request) => {
-  if(req.method === 'GET') {
-    const requestPath = (new URL(req.url)).pathname.split('/');
-    const directoryPath = `${imageBasePath}/${requestPath[2]}`;
-    const filePath = `${directoryPath}/${requestPath[2]}_${
-      requestPath[3]
-    }-${jsonDataFileSuffix}`;
-    const directoryExists = existsSync(directoryPath);
-    const fileExsists = existsSync(filePath);
+  switch (req.method) {
+    case 'GET':
+      // Case UI
+      if(new URL(req.url).pathname === '/metadataForm.html') return getEditorUIHandler(req);
+      if(new URL(req.url).pathname === '/metadataForm.js') return await getFileHandler(req);
+      if(new URL(req.url).pathname === '/metadataForm.css') return await getFileHandler(req);
+      if(new URL(req.url).pathname === '/injectedData.js') return await getInjectionHandler(req);
+      if(new URL(req.url).pathname === '/favicon.ico') return new Response('Not found!', {status: 404});
 
-    if (!directoryExists || !fileExsists) return buildResponse('ARTEFACT_NOT_FOUND', filePath);
+      // Case API
+      return await getMetadataHandler(req);
+    case 'POST':
+      return await updateMetadataHandler(req);
 
-    const metadata = JSON.parse(await Deno.readTextFile(filePath));
-    return new Response(JSON.stringify(metadata, null, 2));
+    default:
+      return buildResponse('UNSUPPORTED_HTTP_VERB');
   }
-  // Try to read body
-  let body: Body = {};
-  try {
-    body = await req.json();
-  } catch {
-    return new Response(config.statusCodes.NO_BODY.message, {
-      status: config.statusCodes.NO_BODY.code,
-    });
-  }
-
-  // Perform further validation
-  const validationResult = await validateRequest(req, body);
-  if (!validationResult.isValid) {
-    return new Response(validationResult.message, {
-      status: validationResult.statusCode,
-    });
-  }
-
-  // Perform request
-  const requestPath = (new URL(req.url)).pathname.split('/');
-  const directoryPath = `${imageBasePath}/${requestPath[2]}`;
-  const filePath = `${directoryPath}/${requestPath[2]}_${
-    requestPath[3]
-  }-${jsonDataFileSuffix}`;
-  const directoryExists = existsSync(directoryPath);
-  const fileExsists = existsSync(filePath);
-
-  if (!fileExsists) return buildResponse('ARTEFACT_NOT_FOUND');
-
-  const metadata = JSON.parse(await Deno.readTextFile(filePath));
-  const updatedMetadata = { ...metadata, ...body };
-
-  await Deno.writeTextFile(filePath, JSON.stringify(updatedMetadata, null, 2));
-
-  // Send response
-  return new Response(
-    fileExsists
-      ? `Successfully updated ${filePath}!\n${JSON.stringify(updatedMetadata)}`
-      : `${filePath} not found!`,
-  );
 };
 
 Deno.serve({ port, hostname, handler });

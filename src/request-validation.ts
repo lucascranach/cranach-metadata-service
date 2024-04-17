@@ -1,10 +1,6 @@
 import config from '../config.json' with { type: 'json' };
 import { apiKey } from './environment.ts';
 
-export interface Body {
-  [key: string]: string;
-} 
-
 export const validateRequest = (
   req: Request,
   body: Body,
@@ -17,15 +13,6 @@ export const validateRequest = (
       isValid: false,
       message: config.statusCodes.UNAUTHORIZED.message,
       statusCode: config.statusCodes.UNAUTHORIZED.code,
-    };
-  }
-
-  // Guard for HTTP method
-  if (req.method !== 'POST') {
-    return {
-      isValid: false,
-      message: config.statusCodes.NO_POST.message,
-      statusCode: config.statusCodes.NO_POST.code,
     };
   }
 

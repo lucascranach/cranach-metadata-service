@@ -1,9 +1,9 @@
 {
   "allowedKeys": [ "image-description-de", "image-description-en", "file-type-de", "file-type-en", "image-created-de", "image-created-en", "image-source-de", "image-source-en", "image-date-de", "image-date-en" ],
   "statusCodes": {
-    "NO_POST": {
+    "UNSUPPORTED_HTTP_VERB": {
       "code": 501,
-      "message": "Only requests with POST method are allowed."
+      "message": "Only requests with GET or POST methods are allowed."
     },
     "NO_BODY": {
       "code": 502,
