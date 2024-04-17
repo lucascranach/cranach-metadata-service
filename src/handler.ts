@@ -34,7 +34,9 @@ export const getEditorUIHandler = async (req: Request) => {
   logger.info(`[${req.url}] Handler: getEditorUIHandler`)
   const artefact = new URL(req.url).searchParams.get('artefact')
   const image = new URL(req.url).searchParams.get('image')
-  const contents = await Deno.readTextFile('./src/static/' + new URL(req.url).pathname)
+  let path = new URL(req.url).pathname;
+  if (hasPathPrefix) path = path.replace(pathPrefix, '');
+  const contents = await Deno.readTextFile('./src/static/' + path)
   const newContent = contents.replace('<!-- INJECTION -->', `<script src="injectedData.js?artefact=${artefact}&image=${image}"></script>`)
   return new Response(newContent, {headers: {'Content-Type': 'text/html; charset=utf-8'}});
 }
@@ -42,7 +44,7 @@ export const getEditorUIHandler = async (req: Request) => {
 export const getFileHandler = async (req: Request) => {
   logger.info(`[${req.url}] Handler: getFileHandler`)
   let path = new URL(req.url).pathname;
-  if(hasPathPrefix) path = path.replace(pathPrefix, '');
+  if (hasPathPrefix) path = path.replace(pathPrefix, '');
   const file = await Deno.open('./src/static/' + path, { read: true });
   const readableStream = file.readable;
   return new Response(readableStream);
@@ -50,8 +52,10 @@ export const getFileHandler = async (req: Request) => {
 
 export const getMetadataHandler = (req: Request) => {
   logger.info(`[${req.url}] Handler: getMetadataHandler`)
-  const requestPath = (new URL(req.url)).pathname.split('/');
-  const filePath = buildFilePath(requestPath[1 + Number(hasPathPrefix)], requestPath[2 + Number(hasPathPrefix)])
+  let path = new URL(req.url).pathname;
+  if (hasPathPrefix) path = path.replace(pathPrefix, '');
+  const requestPath = path.split('/');
+  const filePath = buildFilePath(requestPath[1], requestPath[2])
   const metadata = getMetadata(filePath);
   return new Response(JSON.stringify(metadata, null, 2));
 }
