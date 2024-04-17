@@ -82,7 +82,9 @@ export const updateMetadataHandler = async (req: Request) => {
   }
 
   // Perform request
-  const requestPath = (new URL(req.url)).pathname.split('/');
+  let path = new URL(req.url).pathname;
+  if (hasPathPrefix) path = path.replace(pathPrefix, '');
+  const requestPath = path.split('/');
   const filePath = buildFilePath(requestPath[1], requestPath[2])
   const metadata = await getMetadata(filePath).catch((e) => {console.info(e)});
   const updatedMetadata = { ...metadata, ...body };
