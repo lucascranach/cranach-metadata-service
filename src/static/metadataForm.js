@@ -3,6 +3,8 @@ const artefact = url.searchParams.get('artefact')
 const image = url.searchParams.get('image')
 const apiKey = url.searchParams.get('apiKey')
 
+if(apiKey === null) document.querySelector('button').setAttribute('disabled', true)
+
 Object.keys(this.globalData.fields).forEach((field) => {
   const input = document.querySelector('template').content.cloneNode(true);
   input.querySelector('.label').innerHTML = field;

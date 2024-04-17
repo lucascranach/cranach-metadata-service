@@ -62,4 +62,11 @@ button {
   &:active {
     background-color: #cb9201;
   }
+
+  &:disabled {
+    opacity: .5;
+    user-select: none;
+    pointer-events: none;
+    cursor: default;
+  }
 }
