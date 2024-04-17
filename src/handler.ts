@@ -33,7 +33,7 @@ export const getEditorUIHandler = async (req: Request) => {
 }
 
 export const getFileHandler = async (req: Request) => {
-  const file = await Deno.open('./src/static/' + new URL(req.url).pathname, { read: true });
+  const file = await Deno.open('./src/static/' + new URL(req.url).pathname.replace('/metadata', ''), { read: true });
   const readableStream = file.readable;
   return new Response(readableStream);
 }

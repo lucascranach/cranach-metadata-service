@@ -6,11 +6,11 @@ const handler = async (req: Request) => {
   switch (req.method) {
     case 'GET':
       // Case UI
-      if(new URL(req.url).pathname === '/metadataForm.html') return getEditorUIHandler(req);
-      if(new URL(req.url).pathname === '/metadataForm.js') return await getFileHandler(req);
-      if(new URL(req.url).pathname === '/metadataForm.css') return await getFileHandler(req);
-      if(new URL(req.url).pathname === '/injectedData.js') return await getInjectionHandler(req);
-      if(new URL(req.url).pathname === '/favicon.ico') return new Response('Not found!', {status: 404});
+      if(new URL(req.url).pathname === '/metadata/metadataForm.html') return getEditorUIHandler(req);
+      if(new URL(req.url).pathname === '/metadata/metadataForm.js') return await getFileHandler(req);
+      if(new URL(req.url).pathname === '/metadata/metadataForm.css') return await getFileHandler(req);
+      if(new URL(req.url).pathname === '/metadata/injectedData.js') return await getInjectionHandler(req);
+      if(new URL(req.url).pathname === '/metadata/favicon.ico') return new Response('Not found!', {status: 404});
 
       // Case API
       return await getMetadataHandler(req);
