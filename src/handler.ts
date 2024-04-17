@@ -1,10 +1,16 @@
-import { existsSync } from './deps.ts';
+import { Logger, existsSync } from './deps.ts';
 import { apiKey, imageBasePath, jsonDataFileSuffix } from './environment.ts';
 import { validateRequest } from './request-validation.ts';
 
 import config from '../config.json' with { type: 'json' };
+import { hasPathPrefix, pathPrefix } from './environment.ts';
+
+const logger = new Logger();
+await logger.initFileLogger('./log', { rotate: true });
+
 
 export const getInjectionHandler = async (req: Request) => {
+  logger.info(`[${req.url}] Handler: getInjectionHandler`)
   const url = new URL(req.url);
   const fields: {[key: string]: string|null} = {};
   const artefact = url.searchParams.get('artefact');
@@ -25,6 +31,7 @@ export const getInjectionHandler = async (req: Request) => {
 }
 
 export const getEditorUIHandler = async (req: Request) => {
+  logger.info(`[${req.url}] Handler: getEditorUIHandler`)
   const artefact = new URL(req.url).searchParams.get('artefact')
   const image = new URL(req.url).searchParams.get('image')
   const contents = await Deno.readTextFile('./src/static/' + new URL(req.url).pathname)
@@ -33,19 +40,24 @@ export const getEditorUIHandler = async (req: Request) => {
 }
 
 export const getFileHandler = async (req: Request) => {
-  const file = await Deno.open('./src/static/' + new URL(req.url).pathname.replace('/metadata', ''), { read: true });
+  logger.info(`[${req.url}] Handler: getFileHandler`)
+  let path = new URL(req.url).pathname;
+  if(hasPathPrefix) path = path.replace(pathPrefix, '');
+  const file = await Deno.open('./src/static/' + path, { read: true });
   const readableStream = file.readable;
   return new Response(readableStream);
 }
 
 export const getMetadataHandler = (req: Request) => {
+  logger.info(`[${req.url}] Handler: getMetadataHandler`)
   const requestPath = (new URL(req.url)).pathname.split('/');
-  const filePath = buildFilePath(requestPath[2], requestPath[3])
+  const filePath = buildFilePath(requestPath[1 + Number(hasPathPrefix)], requestPath[2 + Number(hasPathPrefix)])
   const metadata = getMetadata(filePath);
   return new Response(JSON.stringify(metadata, null, 2));
 }
 
 export const updateMetadataHandler = async (req: Request) => {
+  logger.info(`[${req.url}] Handler: updateMetadataHandler`)
   // Try to read body
   let body: Body;
   try {
