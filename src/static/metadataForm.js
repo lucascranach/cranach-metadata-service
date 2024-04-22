@@ -9,7 +9,17 @@ Object.keys(this.globalData.fields).forEach((field) => {
   const input = document.querySelector('template').content.cloneNode(true);
   input.querySelector('.label').innerHTML = field;
   input.querySelector('.input').value = this.globalData.fields[field];
-  input.querySelector('.input').setAttribute('data-id', field)
+  input.querySelector('.input').setAttribute('data-id', field);
+  input.querySelector('.input').setAttribute('list', field);
+  input.querySelector('datalist').setAttribute('id', field);
+  const suggestions = this.globalData.suggestions[field];
+  if(suggestions !== undefined && suggestions.length > 0) {
+    suggestions.forEach((suggestion) => {
+      const newOption = document.createElement('option');
+      newOption.value = suggestion;
+      input.querySelector('datalist').appendChild(newOption);
+    })
+  }
   document.querySelector('.form-fields').appendChild(input);
 })
 

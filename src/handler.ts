@@ -25,7 +25,8 @@ export const getInjectionHandler = async (req: Request) => {
     fields,
     artefact,
     image,
-    pathPrefix
+    pathPrefix,
+    suggestions: config.suggestions,
   });
   return new Response(`this.globalData = ${dataToInject}`);
 }
