@@ -51,13 +51,13 @@ export const getFileHandler = async (req: Request) => {
   return new Response(readableStream);
 }
 
-export const getMetadataHandler = (req: Request) => {
+export const getMetadataHandler = async (req: Request) => {
   logger.info(`[${req.url}] Handler: getMetadataHandler`)
   let path = new URL(req.url).pathname;
   if (hasPathPrefix) path = path.replace(pathPrefix, '');
   const requestPath = path.split('/');
   const filePath = buildFilePath(requestPath[1], requestPath[2])
-  const metadata = getMetadata(filePath);
+  const metadata = await getMetadata(filePath);
   return new Response(JSON.stringify(metadata, null, 2));
 }
 
@@ -94,7 +94,7 @@ export const updateMetadataHandler = async (req: Request) => {
 
 const buildFilePath = (artefact: string, image: string) => {
   const directoryPath = `${imageBasePath}/${artefact}`;
-  return `${directoryPath}/${artefact}_${image}-${jsonDataFileSuffix}`;
+  return `${directoryPath}/${artefact}_${image}${jsonDataFileSuffix}`;
 }
 
 const getMetadata = async (filePath: string) => {
