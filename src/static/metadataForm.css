@@ -2,7 +2,8 @@ html, body {
   display: flex;
   flex-direction: column;
   font-family: IBMPlexSans, sans-serif;
-  padding: .5em;
+  margin: 0;
+  padding: 0;
 }
 
 form {
@@ -25,9 +26,35 @@ label {
   color: #444;
 }
 
-.headline {
-  font-weight: 400;
-  font-size: 1em;
+animation animateIn {
+  from {
+    right: -100%;
+  }
+  to {
+    right: 0;
+  }
+}
+
+.message {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  padding: 1em;
+  border-radius: 3px;
+
+  &.info {
+    background-color: #ffd364;
+  }
+  &.error {
+    background-color: #ff6e6e;
+  }
+  &.success {
+    background-color: #71ff99;
+  }
+
+  &.animate-in {
+    animation: animateIn .3s cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
 }
 
 input[type="text"] {

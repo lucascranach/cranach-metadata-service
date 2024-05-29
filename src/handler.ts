@@ -1,5 +1,5 @@
 import { Logger, existsSync } from './deps.ts';
-import { apiKey, imageBasePath, jsonDataFileSuffix } from './environment.ts';
+import { imageBasePath, jsonDataFileSuffix } from './environment.ts';
 import { validateRequest } from './request-validation.ts';
 
 import config from '../config.json' with { type: 'json' };
