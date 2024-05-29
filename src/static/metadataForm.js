@@ -3,6 +3,10 @@ const artefact = url.searchParams.get('artefact')
 const image = url.searchParams.get('image')
 const apiKey = url.searchParams.get('apiKey')
 
+function notify() {
+  document.querySelector('.message').classList.toggle('animate-in');
+}
+
 if(apiKey === null) document.querySelector('button').setAttribute('disabled', true)
 
 Object.keys(this.globalData.fields).forEach((field) => {
