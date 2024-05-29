@@ -88,7 +88,10 @@ export const updateMetadataHandler = async (req: Request) => {
   const filePath = buildFilePath(requestPath[1], requestPath[2])
   const metadata = await getMetadata(filePath).catch((e) => {console.info(e)});
   const updatedMetadata = { ...metadata, ...body };
+  logger.info(JSON.stringify({filePath, metadata, updatedMetadata}))
+  logger.info(JSON.stringify(`Attempting to write to file ${filePath}`))
   await Deno.writeTextFile(filePath, JSON.stringify(updatedMetadata, null, 2));
+  logger.info(JSON.stringify(`Successfully wrote to file ${filePath}`))
   return new Response(`Successfully updated ${filePath}!\n${JSON.stringify(updatedMetadata)}`);
 }
 
