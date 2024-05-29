@@ -90,7 +90,15 @@ export const updateMetadataHandler = async (req: Request) => {
   const updatedMetadata = { ...metadata, ...body };
   logger.info(JSON.stringify({filePath, metadata, updatedMetadata}))
   logger.info(JSON.stringify(`Attempting to write to file ${filePath}`))
-  await Deno.writeTextFile(filePath, JSON.stringify(updatedMetadata, null, 2));
+  try {
+    await Deno.writeTextFile(filePath, JSON.stringify(updatedMetadata, null, 2));
+  } catch (e) {
+    logger.error(JSON.stringify({filePath, metadata, updatedMetadata}))
+    logger.error(JSON.stringify(e))
+    return new Response(config.statusCodes.ERROR_WRITING_FILE.message, {
+      status: config.statusCodes.ERROR_WRITING_FILE.code,
+    });
+  }
   logger.info(JSON.stringify(`Successfully wrote to file ${filePath}`))
   return new Response(`Successfully updated ${filePath}!\n${JSON.stringify(updatedMetadata)}`);
 }

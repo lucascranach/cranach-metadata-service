@@ -24,6 +24,10 @@
     "UNAUTHORIZED": {
       "code": 501,
       "message": "No or invalid API key found in authorization header."
+    },
+    "ERROR_WRITING_FILE": {
+      "code": 500,
+      "message": "Error writing file."
     }
   },
   "suggestions": {
