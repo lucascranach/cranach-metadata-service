@@ -2,32 +2,40 @@
   "allowedKeys": [ "image-description-de", "image-description-en", "file-type-de", "file-type-en", "image-created-de", "image-created-en", "image-source-de", "image-source-en", "image-date-de", "image-date-en" ],
   "statusCodes": {
     "UNSUPPORTED_HTTP_VERB": {
-      "code": 501,
+      "code": 801,
       "message": "Only requests with GET or POST methods are allowed."
     },
     "NO_BODY": {
-      "code": 502,
+      "code": 802,
       "message": "Missing or empty body found but body expected."
     },
     "NO_PATH": {
-      "code": 503,
+      "code": 803,
       "message": "URL path does not match any image path/name artefact."
     },
     "DISALLOWED_KEY_USED": {
-      "code": 504,
+      "code": 804,
       "message": "Unsupported key used in body."
     },
     "ARTEFACT_NOT_FOUND": {
-      "code": 404,
+      "code": 805,
       "message": "Specified artefact was not found in file tree."
     },
     "UNAUTHORIZED": {
-      "code": 501,
+      "code": 806,
       "message": "No or invalid API key found in authorization header."
     },
     "ERROR_WRITING_FILE": {
-      "code": 500,
+      "code": 807,
       "message": "Error writing file."
+    },
+    "ERROR_CREATING_FILE": {
+      "code": 808,
+      "message": "Error writing file."
+    },
+    "SUCCESS_CREATING_FILE": {
+      "code": 200,
+      "message": "Successfully created file."
     }
   },
   "suggestions": {

@@ -8,6 +8,39 @@ import { hasPathPrefix, pathPrefix } from './environment.ts';
 const logger = new Logger();
 await logger.initFileLogger('./log', { rotate: true });
 
+const getParametersFromUrl = (givenUrl: string) => {
+  const url = new URL(givenUrl);
+  const artefact = url.searchParams.get('artefact') || '';
+  const image = url.searchParams.get('image') || '';
+  return { artefact, image }
+}
+
+const getPathParametersFromUrl = (givenUrl: string) => {
+  let path = new URL(givenUrl).pathname;
+  if (hasPathPrefix) path = path.replace(pathPrefix, '');
+  const requestPath = path.split('/');
+  return { artefact: requestPath[1], image: requestPath[2] }
+}
+
+export const createFolderOrFileHandler = async (req: Request) => {
+  const { artefact, image } = getPathParametersFromUrl(req.url);
+  const filePathInfo = getFilePathInformation(artefact, image);
+  const metadataFileContentWithoutValues = config.allowedKeys.reduce((a: { [key: string]: string }, b: string) => (a[b]='', a), {});
+  try {
+    if (!existsSync(filePathInfo.directoryPath)) {
+      await Deno.mkdir(filePathInfo.directoryPath);
+    }
+    
+    Deno.writeTextFile(filePathInfo.filePath, JSON.stringify(metadataFileContentWithoutValues, null, 2));
+    return new Response(config.statusCodes.SUCCESS_CREATING_FILE.message, {
+      status: config.statusCodes.SUCCESS_CREATING_FILE.code,
+    });
+  } catch (e) {
+    return new Response(config.statusCodes.ERROR_CREATING_FILE.message, {
+      status: config.statusCodes.ERROR_CREATING_FILE.code,
+    });
+  }
+}
 
 export const getInjectionHandler = async (req: Request) => {
   logger.info(`[${req.url}] Handler: getInjectionHandler`)
@@ -103,10 +136,13 @@ export const updateMetadataHandler = async (req: Request) => {
   return new Response(`Successfully updated ${filePath}!\n${JSON.stringify(updatedMetadata)}`);
 }
 
-const buildFilePath = (artefact: string, image: string) => {
+const getFilePathInformation = (artefact: string, image: string) => {
   const directoryPath = `${imageBasePath}/${artefact}`;
-  return `${directoryPath}/${artefact}_${image}${jsonDataFileSuffix}`;
+  const filePath = `${directoryPath}/${artefact}_${image}${jsonDataFileSuffix}`;
+  return { directoryPath, filePath };
 }
+
+const buildFilePath = (artefact: string, image: string) => getFilePathInformation(artefact, image).filePath;
 
 const getMetadata = async (filePath: string) => {
   const fileExsists = existsSync(filePath);

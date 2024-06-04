@@ -97,3 +97,7 @@ button {
     cursor: default;
   }
 }
+
+.hidden {
+  display: none;
+}

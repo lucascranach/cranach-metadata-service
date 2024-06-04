@@ -7,7 +7,12 @@ function notify() {
   document.querySelector('.message').classList.toggle('animate-in');
 }
 
-if(apiKey === null) document.querySelector('button').setAttribute('disabled', true)
+if (apiKey === null) document.querySelector('button').setAttribute('disabled', true)
+
+if (Object.keys(this.globalData.fields).length === 0) {
+  document.querySelector('#createNewFileButton').classList.remove('hidden');
+  document.querySelector('#saveButton').classList.add('hidden');
+}
 
 Object.keys(this.globalData.fields).forEach((field) => {
   const input = document.querySelector('template').content.cloneNode(true);
@@ -37,5 +42,10 @@ form.addEventListener('submit', (event) => {
 
   console.log(data);
   
-  fetch(`${globalData.pathPrefix}/${artefact}/${image}`, {method: 'POST', body: JSON.stringify(data), headers: {Authorization: apiKey}})
+  fetch(`${ globalData.pathPrefix }/${ artefact }/${ image }`, { method: 'POST', body: JSON.stringify(data), headers: { Authorization: apiKey } })
+});
+
+document.querySelector('#createNewFileButton').addEventListener('click', async (_event) => {
+  await fetch(`${globalData.pathPrefix}/${ artefact }/${ image }`, { method: 'PUT', headers: { Authorization: apiKey } })
+  window.location.reload();
 });
