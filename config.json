@@ -105,6 +105,18 @@
       "Assembly of digital images (Indigo Alpha NIR)",
       "Digital image converted from Hamamatsu vidicon",
       "Digital mosaic converted from Hamamatsu vidicon"
+    ],
+    "image-created-de": [
+      "Gunnar Heydenreich, cda"
+    ],
+    "image-created-en": [
+      "Gunnar Heydenreich, cda"
+    ],
+    "image-source-de": [
+      "cda"
+    ],
+    "image-source-en": [
+      "cda"
     ]
   }
 }
