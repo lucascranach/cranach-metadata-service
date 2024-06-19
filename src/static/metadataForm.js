@@ -32,16 +32,18 @@ Object.keys(this.globalData.fields).forEach((field) => {
   document.querySelector('.form-fields').appendChild(input);
 })
 
-const form = document.querySelector('form');
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
+const getCurrentData = () => {
   const data = {}
   document.querySelectorAll('input.input').forEach((element) => {
     data[element.getAttribute('data-id')] = element.value;
   })
+  return data;
+}
 
-  console.log(data);
-  
+const form = document.querySelector('form');
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const data = getCurrentData();
   fetch(`${ globalData.pathPrefix }/${ artefact }/${ image }`, { method: 'POST', body: JSON.stringify(data), headers: { Authorization: apiKey } })
 });
 
@@ -49,3 +51,40 @@ document.querySelector('#createNewFileButton').addEventListener('click', async (
   await fetch(`${globalData.pathPrefix}/${ artefact }/${ image }`, { method: 'PUT', headers: { Authorization: apiKey } })
   window.location.reload();
 });
+
+document.querySelector('#copyButton').addEventListener('click', async (_event) => {
+  const data = getCurrentData();
+  setClipboard(data)
+});
+
+document.querySelector('#pasteButton').addEventListener('click', async (_event) => {
+  const data = await getClipboard();
+  console.log(data)
+  const json = JSON.parse(data)
+  Object.keys(json).forEach((key) => {
+    const input = document.querySelector(`input[data-id="${key}"]`)
+    if(input !== null) input.value = json[key]
+  })
+});
+
+async function setClipboard(text) {
+  const type = "text/plain";
+  const blob = new Blob([JSON.stringify(text)], { type });
+  const data = [new ClipboardItem({ [type]: blob })];
+  await navigator.clipboard.write(data);
+}
+
+async function getClipboard() {
+  try {
+    const clipboardItems = await navigator.clipboard.read();
+
+    for (const clipboardItem of clipboardItems) {
+      for (const type of clipboardItem.types) {
+        const blob = await clipboardItem.getType(type);
+        return await blob.text();
+      }
+    }
+  } catch (err) {
+    console.error(err.name, err.message);
+  }
+}
