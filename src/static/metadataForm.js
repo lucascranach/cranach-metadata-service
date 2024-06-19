@@ -59,7 +59,6 @@ document.querySelector('#copyButton').addEventListener('click', async (_event) =
 
 document.querySelector('#pasteButton').addEventListener('click', async (_event) => {
   const data = await getClipboard();
-  console.log(data)
   const json = JSON.parse(data)
   Object.keys(json).forEach((key) => {
     const input = document.querySelector(`input[data-id="${key}"]`)
