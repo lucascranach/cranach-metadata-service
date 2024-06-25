@@ -13,6 +13,11 @@ form {
   gap: 1em;
 }
 
+.clipboard-actions {
+  display: flex;
+  flex-direction: column;
+}
+
 .input-group {
   display: flex;
   flex-direction: column;
